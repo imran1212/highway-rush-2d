@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -373,7 +372,7 @@ class HighwayRushGame extends FlameGame {
       _best = meters;
       SharedPreferences.getInstance().then(
         (prefs) => prefs.setInt('highway_rush_best_meters', _best),
-      ).catchError((_) {});
+      ).catchError((Object _) => false);
     }
     _publish();
   }
