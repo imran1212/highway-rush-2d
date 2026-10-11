@@ -2,7 +2,7 @@ workflows:
   highway-rush-android-test:
     name: Highway Rush 2D - Device Test APK
     max_build_duration: 60
-    instance_type: linux_x2
+    instance_type: mac_mini_m2
     environment:
       flutter: stable
     scripts:
@@ -27,7 +27,7 @@ workflows:
   highway-rush-playstore-release:
     name: Highway Rush 2D - Play Store Release
     max_build_duration: 60
-    instance_type: linux_x2
+    instance_type: mac_mini_m2
     environment:
       flutter: stable
       android_signing:
