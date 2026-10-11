@@ -72,6 +72,7 @@ class _ChaseRaceScreenState extends State<ChaseRaceScreen> with SingleTickerProv
       item.z += dt * (_speed * .27);
       if (item.z > 1.04) {
         item.z = -.05;
+        item.collected = false;
         item.lane = _random.nextInt(3) - 1;
         item.kind = _random.nextInt(5) == 0 ? 1 : 0;
       }
@@ -118,7 +119,14 @@ class _ChaseRaceScreenState extends State<ChaseRaceScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: [
-        CustomPaint(painter: _ChasePainter(items: _items, lane: _lane, speed: _speed, time: _time, carLevel: _carLevel)),
+        GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onHorizontalDragEnd: (d) {
+          final v = d.primaryVelocity ?? 0;
+          if (v.abs() > 100) setState(() => _targetLane = (_targetLane + (v < 0 ? -1 : 1)).clamp(-1, 1).toDouble());
+        },
+        child: CustomPaint(painter: _ChasePainter(items: _items, lane: _lane, speed: _speed, time: _time, carLevel: _carLevel), size: Size.infinite),
+      ),
         SafeArea(child: Column(children: [
           Padding(padding: const EdgeInsets.fromLTRB(12, 10, 12, 0), child: Row(children: [
             _hud('DISTANCE', '${_distance.floor()} m', Icons.route_rounded),
@@ -158,14 +166,6 @@ class _ChaseRaceScreenState extends State<ChaseRaceScreen> with SingleTickerProv
             child: Text('SWIPE LEFT / RIGHT TO CHANGE LANES', style: TextStyle(color: Colors.white.withOpacity(.78), fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.3)),
           ),
         ])),
-        if (_running && !_showGarage) Positioned.fill(child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onHorizontalDragEnd: (d) {
-            final v = d.primaryVelocity ?? 0;
-            if (v.abs() > 100) setState(() => _targetLane = (_targetLane + (v < 0 ? -1 : 1)).clamp(-1, 1).toDouble());
-          },
-          child: const SizedBox.expand(),
-        )),
         Positioned(top: MediaQuery.paddingOf(context).top + 68, right: 12, child: IconButton.filledTonal(
           onPressed: () => setState(() => _showGarage = !_showGarage),
           icon: Icon(_showGarage ? Icons.close : Icons.garage_rounded),
