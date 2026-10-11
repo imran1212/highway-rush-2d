@@ -63,9 +63,9 @@ class _ChaseRaceScreenState extends State<ChaseRaceScreen> with SingleTickerProv
     final dt = 1 / 60;
     _time += dt;
     _speed += ((_nitroOn && _nitro > 0) ? .0015 : .00035);
-    _speed = _speed.clamp(.45, _nitroOn ? 1.25 : .88);
-    if (_nitroOn && _nitro > 0) _nitro = (_nitro - dt * .18).clamp(0, 1);
-    else _nitro = (_nitro + dt * .035).clamp(0, 1);
+    _speed = _speed.clamp(.45, _nitroOn ? 1.25 : .88).toDouble();
+    if (_nitroOn && _nitro > 0) _nitro = (_nitro - dt * .18).clamp(0, 1).toDouble();
+    else _nitro = (_nitro + dt * .035).clamp(0, 1).toDouble();
     _lane += (_targetLane - _lane) * .16;
     _distance += _speed * dt * 28;
     for (final item in _items) {
